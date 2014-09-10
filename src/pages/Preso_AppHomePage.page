@@ -1,0 +1,93 @@
+<apex:page docType="html-5.0" standardStylesheets="false" showHeader="false" sidebar="false"  Controller="Preso_AppHomeController">
+
+	<head>
+	
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"/>
+        <link rel="stylesheet" href="{!URLFOR($Resource.DynamicSalesPresentation, 'css/themes/DynamicSalesPresentation.min.css')}" />
+        <link rel="stylesheet" href="{!URLFOR($Resource.DynamicSalesPresentation, 'css/themes/jquery.mobile.icons.min.css')}" /> 
+        <link rel="stylesheet" href="{!URLFOR($Resource.DynamicSalesPresentation, 'css/jquery.mobile.structure-1.4.3.min.css')}" />
+        <link rel="stylesheet" href="{!URLFOR($Resource.DynamicSalesPresentation, 'css/gridoverlay.css')}" />
+        <link rel="stylesheet" href="{!URLFOR($Resource.DynamicSalesPresentation, 'css/responsiveGrid.css')}" />
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"></link>
+        
+        <script type="text/javascript" src="/canvas/sdk/js/publisher.js"></script>
+        <script type="text/javascript" src="{!URLFOR($Resource.DynamicSalesPresentation, 'js/jquery-1.11.1.min.js')}"></script>
+        <script type="text/javascript" src="{!URLFOR($Resource.DynamicSalesPresentation, 'js/jquery.mobile-1.4.3.min.js')}"></script>
+        <script type="text/javascript" src="{!URLFOR($Resource.overlay, 'js/modernizr.js')}"></script>
+        
+    </head>
+    <script>
+    
+    	$(document).ready(function(){
+            
+            //PRESO_HOMEPAGE.searchPresentation('','FetchAll');
+        });
+        
+        var PRESO_HOMEPAGE = function() {
+        
+        	var searchPresentation = function(searchkeyword, invokePlace) { 
+        
+        		console.log('******** searchkeyword ********'+searchkeyword);
+        		console.log('******** invokePlace ********'+invokePlace);
+        		
+        		Preso_AppHomeController.fetchPresentation(searchkeyword, invokePlace, function(result) { 
+        		
+        		console.log('****result **** '+result);
+        
+        		});
+        	}
+        	var clonePreso = function(PresoName) { 
+        
+        		Preso_AppHomeController.clonePresentation(PresoName, function(result) { 
+        		
+        		console.log('****result **** '+result);
+        
+        		});
+        	}
+        	var addToFavourite = function(PresoId, strAction) { 
+        
+        		Preso_AppHomeController.addToFavourite(PresoId, strAction, function(result) { 
+        		
+        		console.log('****result **** '+result);
+        
+        		});
+        	}
+        	return {
+        		
+        		searchPresentation : searchPresentation,
+        		clonePreso : clonePreso,
+        		addToFavourite: addToFavourite
+        	}
+        }();
+        
+    </script>
+     <apex:form >
+    
+		<div style="width:100%;height:auto;"> 
+			<input type="search" id="presentationNameInPut" autocomplete="on" placeholder="Enter Presentation Name to search" value="" onChange="PRESO_HOMEPAGE.searchPresentation(this.value, 'SEARCH');" data-clear-btn="true"/>
+		</div>
+		
+		<div style="width:100%;height:auto;"> 
+			<input type="button" id="favIcon"  value="FAV" onClick="PRESO_HOMEPAGE.searchPresentation('', 'FAVOURITE');" data-clear-btn="true"/>
+		</div>
+		
+		<div style="width:100%;height:auto;"> 
+			<input type="button" id="favIcon"  value="SORTING" onClick="PRESO_HOMEPAGE.searchPresentation('', 'SORTING');" data-clear-btn="true"/>
+		</div>
+		
+		<div style="width:100%;height:auto;"> 
+			<input type="button" id="favIcon"  value="CLONE" onClick="PRESO_HOMEPAGE.clonePreso('SORTING');" data-clear-btn="true"/>
+		</div>
+		
+		<div style="width:100%;height:auto;"> 
+			<input type="button" id="favIcon"  value="AddFav" onClick="PRESO_HOMEPAGE.addToFavourite('Id1', 'ADDFAV');" data-clear-btn="true"/>
+		</div>
+		<div style="width:100%;height:auto;"> 
+			<input type="button" id="unfavIcon"  value="UnFav" onClick="PRESO_HOMEPAGE.addToFavourite('Id2', 'ADDUNFAV');" data-clear-btn="true"/>
+		</div>
+		
+    </apex:form>
+    
+    
+</apex:page>

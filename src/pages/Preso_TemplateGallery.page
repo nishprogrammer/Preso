@@ -1,0 +1,110 @@
+<apex:page showheader="false" sidebar="false" controller="Preso_TemplateGalleryController">
+
+    
+        <script type="text/javascript" src="{!URLFOR($Resource.DynamicSalesPresentation, 'js/jquery-1.11.1.min.js')}"></script>
+        <script type="text/javascript" src="{!URLFOR($Resource.DynamicSalesPresentation, 'js/jquery-ui.js')}"></script>
+        
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"></link>
+        <link rel="stylesheet" href="{!URLFOR($Resource.Frola, 'font-awesome-4.2.0/css/font-awesome.css')}" />
+        <link rel="stylesheet" href="{!URLFOR($Resource.Frola, 'font-awesome-4.2.0/css/froala_editor.min.css')}" />
+        
+        <script type="text/javascript" src="{!URLFOR($Resource.Frola, 'font-awesome-4.2.0/jquery-1.11.1.min.js')}"></script>
+        <script type="text/javascript" src="{!URLFOR($Resource.Frola, 'font-awesome-4.2.0/froala_editor.min.js')}"></script>
+        <script>
+        
+       
+        
+         
+          $(document).ready(function() {
+      
+                                
+                Visualforce.remoting.Manager.invokeAction(
+                  '{!$RemoteAction.Preso_TemplateGalleryController.authenticateAndFetchTemplates}',{!lstPresentationTemplate}, 
+                  function(result, event) 
+                      { 
+                          if(event.type == 'exception')
+                          {
+                            alert("exception");
+                          } 
+                          else
+                          {
+                             fetchContact(result);
+                             console.log('+++++result+++++',{!lstPresentationTemplate});
+                          }
+                     
+                 });
+                 
+                 function fetchContact(response) {
+                   
+                        var responseData ='';
+                        $.each( response, function( index, value ){
+                            var strHTMLContent = value.HTMLContent ;
+                            
+                           resposeData =  $( '<div class="templateHolder" onClick="fetchTemplateById(\''+value.strTemplateId+'\',\''+value.templateName+'\')">' +
+                             				$('#htmlConverter').html(strHTMLContent).text()+
+                              			 '</div>');
+                                                                
+                            console.log('+++++++++++++',resposeData);
+                            $('#templatesContainer').append(resposeData);   
+                                            
+                        }); 
+                      
+                }
+             
+         
+           });
+           
+           
+           
+           var fetchTemplateById = function(templateId, templateName) {
+           
+          	alert(templateId);
+          	if(templateId != '' && templateName != '')
+          		  Visualforce.remoting.Manager.invokeAction(
+                  '{!$RemoteAction.Preso_TemplateGalleryController.authenticateAndFetchTemplateById}',{!lstTemplateLayouts}, templateId,
+                  function(result, event) 
+                      { 
+                          if(event.type == 'exception')
+                          {
+                            alert("exception");
+                          } 
+                          else
+                          {
+                             
+                             $('#templatesContainer').hide();
+                             fetchTemplateById(result);
+                             console.log('+++++result+++++',result);
+                          }
+                     
+                 });
+                 
+                 function fetchTemplateById(response) {
+                   
+                        var responseData ='';
+                        $.each( response, function( index, value ) {
+                        
+                           var strHTMLContent = value.HTMLContent_Layout ;
+                            
+                           resposeData =  $( '<div class="templateLayoutHolder" onClick="">' +
+                             				$('#htmlConverterForLayout').html(strHTMLContent).text()+
+                              			 '</div>');
+                                                                
+                            console.log('+++++++++++++',resposeData);
+                            $('#templateLayoutsContainer').append(resposeData);   
+                                            
+                        }); 
+                      
+                }
+             
+          	
+          }
+                         
+          
+        </script>
+    <apex:form id="frm">
+         <div id="templatesContainer"/>
+         <div id="templateLayoutsContainer"/>
+         <div id="htmlConverter" style="display: none;"></div>
+         <div id="htmlConverterForLayout" style="display: none;"></div>
+    </apex:form>   
+</apex:page>
